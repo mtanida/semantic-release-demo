@@ -1,0 +1,103 @@
+name: "Semantic Release"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+env:
+  NODE_VERSON: "22.15.0"
+jobs:
+  #============================================================================
+  # Semantic Release (dryrun)
+  #============================================================================
+  semrel-dryrun:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    outputs:
+      release_tag: ${{ steps.dryrun.outputs.release_tag }}
+    timeout-minutes: 2
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - name: Dry run semantic-release to get version
+        id: dryrun
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          VERSION=$(npx semantic-release --dry-run | grep -oP 'Release note for version \K[0-9]+\.[0-9]+\.[0-9]+' || echo '')
+          echo "release_tag=${VERSION:-latest}" >> "$GITHUB_OUTPUT"
+      - name: Print release version
+        run: echo "Version from dry run is ${{ steps.dryrun.outputs.release_tag }}"
+
+  #============================================================================
+  # docker-build
+  #============================================================================
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [semrel-dryrun]
+    if: always()
+    timeout-minutes: 2
+    steps:
+      - name: Get release tag
+        id: tag
+        run: |
+          TAG=${{ needs.semrel-dryrun.outputs.release_tag }}
+          echo "release_tag=${TAG:-latest}" >> $GITHUB_OUTPUT
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_TOKEN }}
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          file: ./Dockerfile
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.release_tag }}
+
+  #============================================================================
+  # semantic-release
+  #============================================================================
+  semrel:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [docker-build]
+    timeout-minutes: 2
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - run: npm ci
+      - run: npm audit signatures
+      - name: Run semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: npx semantic-release
