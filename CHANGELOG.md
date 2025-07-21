@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/mtanida/semantic-release-demo/compare/v1.1.0...v1.2.0) (2025-07-21)
+
+
+### Features
+
+* add debian pkg to release ([db52f7e](https://github.com/mtanida/semantic-release-demo/commit/db52f7e2bae92c993a2e00a0250f9e3ab786233f))
+
 # [1.1.0](https://github.com/mtanida/semantic-release-demo/compare/v1.0.0...v1.1.0) (2025-06-25)
 
 
