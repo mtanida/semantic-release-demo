@@ -103,6 +103,12 @@ jobs:
           cd mypackage
           ./build-deb.sh
           ls -lha
+      - name: Upload debian artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: debian-pkg
+          path: |
+            ./mypackage/mypackage_*.deb
 
   #============================================================================
   # semantic-release
@@ -121,6 +127,12 @@ jobs:
           lfs: true
           fetch-depth: 0
           token: ${{ secrets.GH_TOKEN }}
+      - name: Download debian artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: debian-pkg
+          path: |
+            ./mypackage
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
