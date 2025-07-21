@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/mtanida/semantic-release-demo/compare/v1.2.0...v1.3.0) (2025-07-21)
+
+
+### Features
+
+* add debian pkg to semrel ([b1cd21c](https://github.com/mtanida/semantic-release-demo/commit/b1cd21c7b28fb3ad0f4ef5ada7872405aed9767c))
+
 # [1.2.0](https://github.com/mtanida/semantic-release-demo/compare/v1.1.0...v1.2.0) (2025-07-21)
 
 
