@@ -10,7 +10,7 @@
       {
         "assets": [
           "mypackage/mypackage_*.deb",
-          "CHANGELOG.mod"
+          "CHANGELOG.md"
         ]
       }
     ]
