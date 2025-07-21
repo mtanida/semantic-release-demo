@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/mtanida/semantic-release-demo/compare/v1.3.0...v1.3.1) (2025-07-21)
+
+
+### Bug Fixes
+
+* changelog typo in releaserc ([878b813](https://github.com/mtanida/semantic-release-demo/commit/878b813b04b89cf4c35cfbf926c3ed2cecfbb51e))
+
 # [1.3.0](https://github.com/mtanida/semantic-release-demo/compare/v1.2.0...v1.3.0) (2025-07-21)
 
 
