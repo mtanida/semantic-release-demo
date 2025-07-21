@@ -78,12 +78,41 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.release_tag }}
 
   #============================================================================
+  # debian-build
+  #============================================================================
+  debian-build:
+    runs-on: ubuntu-latest
+    needs: [semrel-dryrun]
+    timeout-minutes: 2
+    steps:
+      - name: Get release tag
+        id: tag
+        run: |
+          TAG=${{ needs.semrel-dryrun.outputs.release_tag }}
+          echo "release_tag=${TAG:-latest}" >> $GITHUB_OUTPUT
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Build debian package
+        env:
+          PKG_VERSION: ${{ steps.tag.outputs.release_tag }}
+        run: |
+          cd mypackage
+          ./build-deb.sh
+          ls -lha
+
+  #============================================================================
   # semantic-release
   #============================================================================
   semrel:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    needs: [docker-build]
+    needs:
+      - docker-build
+      - debian-build
     timeout-minutes: 2
     steps:
       - name: Checkout repo
