@@ -1,0 +1,7 @@
+Package: mypackage
+Version: 1.2.3
+Section: base
+Priority: optional
+Architecture: all
+Maintainer: Masatoshi Tanida <masatoshi@example.com>
+Description: A minimal Debian package that installs a script.
