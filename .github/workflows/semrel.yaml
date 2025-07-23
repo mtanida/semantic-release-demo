@@ -35,7 +35,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          VERSION=$(npx semantic-release --dry-run | grep -oP 'Release note for version \K[0-9]+\.[0-9]+\.[0-9]+' || echo '')
+          npx semantic-release --dry-run
+          VERSION=$(cat .version || echo "")
+          echo "next VERSION is ${VERSION}"
           echo "release_tag=${VERSION:-latest}" >> "$GITHUB_OUTPUT"
       - name: Print release version
         run: echo "Version from dry run is ${{ steps.dryrun.outputs.release_tag }}"
