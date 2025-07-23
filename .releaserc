@@ -6,6 +6,12 @@
     "@semantic-release/changelog",
     "@semantic-release/git",
     [
+      "@semantic-release/exec",
+      {
+        "verifyConditionsCmd": "echo ${nextRelease.version} > .version"
+      }
+    ],
+    [
       "@semantic-release/github",
       {
         "assets": [
