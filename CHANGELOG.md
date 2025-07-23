@@ -1,3 +1,16 @@
+# [1.4.0](https://github.com/mtanida/semantic-release-demo/compare/v1.3.1...v1.4.0) (2025-07-23)
+
+
+### Bug Fixes
+
+* dry-run job ([f2d3463](https://github.com/mtanida/semantic-release-demo/commit/f2d3463f7b816fb97fbcde6477926591927eda05))
+* dry-run job attempt 2 ([ef44d5d](https://github.com/mtanida/semantic-release-demo/commit/ef44d5dde8c9f82fe55e4a5f60c6833e3d2db771))
+
+
+### Features
+
+* make dryrun less brittle ([da5a589](https://github.com/mtanida/semantic-release-demo/commit/da5a5898e6293825b98e12ff189d4660275ba503))
+
 ## [1.3.1](https://github.com/mtanida/semantic-release-demo/compare/v1.3.0...v1.3.1) (2025-07-21)
 
 
